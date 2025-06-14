@@ -11,6 +11,11 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "paths": {
+      "ngx-smart-permissions": [
+        "./dist/ngx-smart-permissions"
+      ]
+    },
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
