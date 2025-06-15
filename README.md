@@ -156,4 +156,4 @@ src/
 
 ## 📄 License
 
-MIT © [Rami Shaikha](https://github.com/rami-sheikha-dev)
+MIT © [Rami Shaikha](https://github.com/rami-sheikha-dev/ngx-smart-permissions)
