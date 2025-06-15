@@ -1,8 +1,14 @@
 {
   "name": "ngx-smart-permissions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Smart permissions system for Angular apps with role & permission-based access control.",
-  "author": "Rami Shaikha",
+  "author": {
+    "name": "Rami Shaikha",
+    "url": "https://github.com/rami-sheikha-dev/ngx-smart-permissions"
+  },
+  "publishConfig": {
+  "access": "public"
+},
   "license": "MIT",
   "keywords": [
     "angular",
