@@ -4,7 +4,7 @@ import {
   makeEnvironmentProviders
 } from '@angular/core';
 
-import { NgxSmartPermissionsModule } from './ngx-smart-permissions.module';
+import { NgxSmartPermissionsModule } from '../ngx-smart-permissions.module';
 import { NgxSmartPermissionsConfig } from './permission.config';
 
 let GLOBAL_CONFIG: NgxSmartPermissionsConfig = {

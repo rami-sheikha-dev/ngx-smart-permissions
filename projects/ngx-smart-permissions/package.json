@@ -1,12 +1,37 @@
 {
   "name": "ngx-smart-permissions",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "description": "Smart permissions system for Angular apps with role & permission-based access control.",
+  "author": "Rami Shaikha",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "permissions",
+    "roles",
+    "access-control",
+    "ngx",
+    "auth",
+    "angular18",
+    "ngx-smart-permissions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rami-sheikha-dev/ngx-smart-permissions"
+  },
+  "bugs": {
+    "url": "https://github.com/rami-sheikha-dev/ngx-smart-permissions/issues"
+  },
+  "homepage": "https://github.com/rami-sheikha-dev/ngx-smart-permissions#readme",
   "peerDependencies": {
-    "@angular/common": "^18.2.0",
-    "@angular/core": "^18.2.0"
+    "@angular/common": "^17.0.0 || ^18.0.0",
+    "@angular/core": "^17.0.0 || ^18.0.0",
+    "@angular/router": "^17.0.0 || ^18.0.0",
+    "rxjs": "^7.8.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.6.2"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "module": "./index.js",
+  "typings": "./index.d.ts"
 }

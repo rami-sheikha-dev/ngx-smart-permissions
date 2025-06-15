@@ -4,10 +4,11 @@ import {
   TemplateRef,
   ViewContainerRef,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
-import { PermissionService } from '../permission.service';
 import { Subscription } from 'rxjs';
+import { PermissionService } from '../permission/permission.service';
 
 @Directive({
   selector: '[ngxHasPermission]',
@@ -21,16 +22,15 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
   constructor(
     private tpl: TemplateRef<any>,
     private vcr: ViewContainerRef,
-    private permissionService: PermissionService
+    private permissionService: PermissionService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    // راقب التغييرات على الصلاحيات
     this.sub = this.permissionService.permissionsChanged$.subscribe(() => {
       this.updateView();
     });
 
-    // تأكد أول مرة
     this.updateView();
   }
 
@@ -43,6 +43,9 @@ export class HasPermissionDirective implements OnInit, OnDestroy {
     if (has) {
       this.vcr.createEmbeddedView(this.tpl);
     }
+
+    // ✅ Force Angular to detect changes immediately
+    this.cdRef.markForCheck(); // or detectChanges() if needed
   }
 
   ngOnDestroy() {

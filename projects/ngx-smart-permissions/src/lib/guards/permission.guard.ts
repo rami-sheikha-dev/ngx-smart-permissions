@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
-import { PermissionService } from '../permission.service';
-import { getPermissionsConfig } from '../permissions.providers';
+import { PermissionService } from '../permission/permission.service';
+import { getPermissionsConfig } from '../permission/permissions.providers';
  
 export const permissionGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
