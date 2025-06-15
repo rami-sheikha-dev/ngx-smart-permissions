@@ -1,27 +1,159 @@
-# NgxSmartPermissionsWorkspace
+# 🔐 ngx-smart-permissions
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.10.
+**ngx-smart-permissions** is a lightweight and smart Angular library for managing **role-based** and **permission-based** access control in Angular applications. Supports both **standalone components** and **NgModules**.  
+Built for Angular 17+ & 18+.
 
-## Development server
+---
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## ✨ Features
 
-## Code scaffolding
+- ✅ Show/Hide UI based on **permissions** or **roles**
+- ✅ Reusable **Directives**: `*ngxHasPermission`, `*ngxHasRole`
+- ✅ Built-in **Route Guard** for permission-based navigation
+- ✅ Live permission switching (great for testing/admins)
+- ✅ Support for **Super Admin**
+- ✅ Lazy-loaded module support
+- ✅ Fully compatible with **Standalone Components**
+- ✅ Easy setup with `provideNgxSmartPermissions(...)`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+---
 
-## Build
+## 📦 Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install ngx-smart-permissions
+```
 
-## Running unit tests
+---
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 🛠️ Setup
 
-## Running end-to-end tests
+### 1. Register the providers
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+In `main.ts`:
 
-## Further help
+```ts
+import { provideNgxSmartPermissions } from 'ngx-smart-permissions';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideNgxSmartPermissions({
+      redirectTo: '/unauthorized' // optional
+    })
+  ]
+});
+```
+
+Or inside an NgModule:
+
+```ts
+@NgModule({
+  imports: [
+    NgxSmartPermissionsModule
+  ]
+})
+export class AppModule {}
+```
+
+---
+
+## 🧠 Usage
+
+### ✅ UI Directive: `*ngxHasPermission`
+
+```html
+<!-- Show only if user has "edit-post" permission -->
+<button *ngxHasPermission="'edit-post'">Edit</button>
+
+<!-- Show if user has ANY of these -->
+<div *ngxHasPermission="['admin', 'editor']">Admin Tools</div>
+```
+
+### ✅ Role Directive: `*ngxHasRole`
+
+```html
+<div *ngxHasRole="'admin'">Welcome, Admin</div>
+```
+
+---
+
+### 🔐 Permission Guard
+
+Protect routes by permission:
+
+```ts
+import { permissionGuard } from 'ngx-smart-permissions';
+
+{
+  path: 'admin',
+  canActivate: [permissionGuard],
+  data: {
+    permission: 'access-admin'
+  }
+}
+```
+
+---
+
+## 🔄 Set Permissions (e.g. after login)
+
+In your AuthService or login component:
+
+```ts
+const permissions = ['view-dashboard', 'edit-user'];
+const role = 'admin';
+const isSuperAdmin = role === 'admin';
+
+permissionService.switchPermissions(permissions, isSuperAdmin, role);
+```
+
+---
+
+## 🚫 Access Denied Page
+
+Use `redirectTo` in `provideNgxSmartPermissions()` to control redirection for unauthorized access.
+
+```ts
+provideNgxSmartPermissions({ redirectTo: '/unauthorized' });
+```
+
+---
+
+## 🧪 Testing
+
+Basic unit tests are recommended for your permission logic.  
+You can spy on `PermissionService` methods for behavior tests.
+
+---
+
+## 📁 File Structure
+
+```
+src/
+└── lib/
+    ├── directives/
+    │   ├── has-permission.directive.ts
+    │   └── has-role.directive.ts
+    ├── guards/
+    │   └── permission.guard.ts
+    ├── permission/
+    │   ├── permission.service.ts
+    │   ├── permission.config.ts
+    │   └── permissions.providers.ts
+    ├── ngx-smart-permissions.module.ts
+    └── public-api.ts
+```
+
+---
+
+## ✅ Compatibility
+
+- ✅ Angular 17 & 18
+- ✅ Supports both `NgModules` & `Standalone Components`
+- ✅ Fully tree-shakable & side-effect free
+
+---
+
+## 📄 License
+
+MIT © [Rami Shaikha](https://github.com/rami-sheikha-dev)
