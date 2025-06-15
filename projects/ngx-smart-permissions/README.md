@@ -154,6 +154,13 @@ src/
 
 ---
 
+## 🌐 Live Demo
+
+Check out the live demo on GitHub:  
+👉 **[ngx-smart-permissions Demo App](https://github.com/rami-sheikha-dev/ngx-smart-permissions-demo)**
+
+---
+
 ## 📄 License
 
-MIT © [Rami Shaikha](https://github.com/rami-sheikha-dev)
+MIT © [Rami Shaikha](https://github.com/rami-sheikha-dev/ngx-smart-permissions)

@@ -1,6 +1,6 @@
 {
   "name": "ngx-smart-permissions",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Smart permissions system for Angular apps with role & permission-based access control.",
   "author": {
     "name": "Rami Shaikha",
