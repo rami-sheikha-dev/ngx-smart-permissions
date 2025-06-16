@@ -3,52 +3,68 @@ import {
   Input,
   TemplateRef,
   ViewContainerRef,
-  OnInit,
   OnDestroy,
-  ChangeDetectorRef
+  OnInit,
 } from '@angular/core';
+import { PermissionsService } from '../services/permissions.service';
 import { Subscription } from 'rxjs';
-import { PermissionService } from '../permission/permission.service';
 
 @Directive({
   selector: '[ngxHasPermission]',
-  standalone: true
 })
 export class HasPermissionDirective implements OnInit, OnDestroy {
-  @Input('ngxHasPermission') required: string | string[] = '';
-
-  private sub?: Subscription;
+  private requiredPermission: string | null = null;
+  private context: any = {};
+  private sub = new Subscription();
 
   constructor(
-    private tpl: TemplateRef<any>,
-    private vcr: ViewContainerRef,
-    private permissionService: PermissionService,
-    private cdRef: ChangeDetectorRef
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef,
+    private permissionsService: PermissionsService
   ) {}
 
-  ngOnInit() {
-    this.sub = this.permissionService.permissionsChanged$.subscribe(() => {
-      this.updateView();
-    });
-
+  @Input()
+  set ngxHasPermission(value: string | { action: string; subject: string; object?: any }) {
+    if (typeof value === 'string') {
+      const [action, subject] = value.split(':');
+      this.context = { action, subject };
+    } else {
+      this.context = {
+        action: value.action,
+        subject: value.subject,
+        object: value.object || {},
+      };
+    }
     this.updateView();
   }
 
+  ngOnInit() {
+    this.sub.add(
+      this.permissionsService.getCurrentRole().subscribe(() => this.updateView())
+    );
+    this.sub.add(
+      this.permissionsService.getRules().subscribe(() => this.updateView())
+    );
+  }
+
   private updateView() {
-    const has = Array.isArray(this.required)
-      ? this.permissionService.hasAnyPermission(this.required)
-      : this.permissionService.hasPermission(this.required);
+    const { action, subject, object } = this.context;
 
-    this.vcr.clear();
-    if (has) {
-      this.vcr.createEmbeddedView(this.tpl);
+    const isSuperAdmin = this.permissionsService['can']?.name === 'bound can' // fallback check
+      ? false
+      : this.permissionsService['role$']?.getValue?.() === 'superadmin';
+
+    const hasAccess =
+      isSuperAdmin || this.permissionsService.can(action, subject, object);
+
+    this.viewContainer.clear();
+
+    if (hasAccess) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
     }
-
-    // ✅ Force Angular to detect changes immediately
-    this.cdRef.markForCheck(); // or detectChanges() if needed
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.sub.unsubscribe();
   }
 }

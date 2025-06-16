@@ -3,43 +3,52 @@ import {
   Input,
   TemplateRef,
   ViewContainerRef,
+  OnDestroy,
   OnInit,
-  OnDestroy
 } from '@angular/core';
-import { PermissionService } from '../permission/permission.service';
+import { PermissionsService } from '../services/permissions.service';
 import { Subscription } from 'rxjs';
 
 @Directive({
   selector: '[ngxHasRole]',
-  standalone: true
 })
 export class HasRoleDirective implements OnInit, OnDestroy {
-  @Input('ngxHasRole') required: string | string[] = '';
-
-  private sub?: Subscription;
+  private requiredRoles: string[] = [];
+  private sub = new Subscription();
 
   constructor(
-    private tpl: TemplateRef<any>,
-    private vcr: ViewContainerRef,
-    private permissionService: PermissionService
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef,
+    private permissionsService: PermissionsService
   ) {}
 
-  ngOnInit() {
-    this.sub = this.permissionService.roleChanged$.subscribe(() => {
-      this.updateView();
-    });
+  @Input()
+  set ngxHasRole(value: string | string[]) {
+    this.requiredRoles = Array.isArray(value) ? value : [value];
     this.updateView();
   }
 
+  ngOnInit() {
+    this.sub.add(
+      this.permissionsService.getCurrentRole().subscribe(() => this.updateView())
+    );
+  }
+
   private updateView() {
-    const has = this.permissionService.hasRole(this.required);
-    this.vcr.clear();
-    if (has) {
-      this.vcr.createEmbeddedView(this.tpl);
+    const currentRole = this.permissionsService['role$']?.getValue?.();
+    const isSuperAdmin = currentRole === 'superadmin';
+
+    const hasRole =
+      isSuperAdmin || this.requiredRoles.includes(currentRole ?? '');
+
+    this.viewContainer.clear();
+
+    if (hasRole) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
     }
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.sub.unsubscribe();
   }
 }
